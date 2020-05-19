@@ -33,7 +33,7 @@ public class Game {
 	}
 
 	public Error move(Coordinate... coordinates) {
-        Error error = null;
+        Error error;
         List<Coordinate> removedCoordinates = new ArrayList<Coordinate>();
         List<Coordinate> piecesCanCapture = new ArrayList<>();
         List<Coordinate> coordinateList =  this.getCoordinatesWithActualColor();
@@ -67,26 +67,26 @@ public class Game {
         return error;
     }
 
-    public Boolean isCanCapture(Coordinate coordinate) {
+    private Boolean isCanCapture(Coordinate coordinate) {
         for (int x = 1; x<=5;x++){
-            if(coordinate.getRow()+(x+1)<=7 && coordinate.getColumn()+(x+1)<=7)
-                if(checkCapture(0,coordinate, new Coordinate(coordinate.getRow()+(x+1),coordinate.getColumn()+(x+1))))
+            if(coordinate.getRow()+(x+1) <= Coordinate.getUpperLimit() && coordinate.getColumn()+(x+1) <= Coordinate.getUpperLimit())
+                if(checkCapture(coordinate, new Coordinate(coordinate.getRow()+(x+1),coordinate.getColumn()+(x+1))))
                     return true;
-            if(coordinate.getRow()+(x+1)<=7 && coordinate.getColumn()-(x+1)>=0)
-                if(checkCapture(0,coordinate, new Coordinate(coordinate.getRow()+(x+1),coordinate.getColumn()-(x+1))))
+            if(coordinate.getRow()+(x+1) <= Coordinate.getUpperLimit() && coordinate.getColumn()-(x+1) >= Coordinate.getLowerLimit())
+                if(checkCapture(coordinate, new Coordinate(coordinate.getRow()+(x+1),coordinate.getColumn()-(x+1))))
                     return true;
-            if(coordinate.getRow()-(x+1)>=0 && coordinate.getColumn()+(x+1)<=7)
-                if(checkCapture(0,coordinate, new Coordinate(coordinate.getRow()-(x+1),coordinate.getColumn()+(x+1))))
+            if(coordinate.getRow()-(x+1) >= Coordinate.getLowerLimit() && coordinate.getColumn()+(x+1) <= Coordinate.getUpperLimit())
+                if(checkCapture(coordinate, new Coordinate(coordinate.getRow()-(x+1),coordinate.getColumn()+(x+1))))
                     return true;
-            if(coordinate.getRow()-(x+1)>=0 && coordinate.getColumn()-(x+1)>=0)
-                if(checkCapture(0,coordinate, new Coordinate(coordinate.getRow()-(x+1),coordinate.getColumn()-(x+1))))
+            if(coordinate.getRow()-(x+1) >= Coordinate.getLowerLimit() && coordinate.getColumn()-(x+1) >= Coordinate.getLowerLimit())
+                if(checkCapture(coordinate, new Coordinate(coordinate.getRow()-(x+1),coordinate.getColumn()-(x+1))))
                     return true;
         }
         return false;
     }
 
-    private Boolean checkCapture(int pair, Coordinate... coordinates) {
-        return this.isCorrectPairMove(pair, coordinates) == null && this.getBetweenDiagonalPiece(pair, coordinates) != null;
+    private Boolean checkCapture(Coordinate... coordinates) {
+        return this.isCorrectPairMove(0, coordinates) == null && this.getBetweenDiagonalPiece(0, coordinates) != null;
     }
 
 	private Error isCorrectPairMove(int pair, Coordinate... coordinates) {
