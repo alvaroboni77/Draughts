@@ -172,43 +172,4 @@ public class PlayControllerTest {
         assertTrue(playController.getPiece(new Coordinate(6, 1)) == null
             || playController.getPiece(new Coordinate(2, 6)) == null);
     }
-
-    @Test
-    public void testGivenPlayControllerWhenDraughtsCanEatAndWillNotEatWhite() {
-        Game game = new GameBuilder().rows(
-            "       n",
-            "  B n   ",
-            " n      ",
-            "      n ",
-            "        ",
-            "    b   ",
-            "   N   b",
-            "        ").build();
-        playController = new PlayController(game, new State());
-        Coordinate origin = new Coordinate(1, 2);
-        Coordinate target = new Coordinate(3, 0);
-        playController.move(origin, target);
-        origin = new Coordinate(3, 6);
-        target = new Coordinate(4, 7);
-        playController.move(origin, target);
-        assertNull(playController.getPiece(new Coordinate(6, 3)));
-    }
-
-    @Test
-    public void testGivenPlayControllerWhenDraughtsCanEatAndWillNotEatBlack() {
-        Game game = new GameBuilder().rows(
-            "       n",
-            "  B   n ",
-            " n      ",
-            "        ",
-            "        ",
-            "    b   ",
-            "   n   b",
-            "        ").build();
-        playController = new PlayController(game, new State());
-        Coordinate origin = new Coordinate(5, 4);
-        Coordinate target = new Coordinate(4, 5);
-        playController.move(origin, target);
-        assertNull(playController.getPiece(new Coordinate(1, 2)));
-    }
 }
