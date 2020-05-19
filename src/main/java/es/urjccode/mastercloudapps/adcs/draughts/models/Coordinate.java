@@ -47,8 +47,8 @@ public class Coordinate {
     Direction getDirection(Coordinate coordinate) {
         assert coordinate != null;
         Coordinate substract = coordinate.substract(this);
-        for (Direction direction : Direction.values()) 
-            if (direction.isOnDirection(substract)) 
+        for (Direction direction : Direction.values())
+            if (direction.isOnDirection(substract))
                 return direction;
         return null;
     }
@@ -84,7 +84,7 @@ public class Coordinate {
         List<Coordinate> diagonalCoordinates = new ArrayList<Coordinate>();
         for (Direction direction : Direction.values()) {
             Coordinate diagonalCoordinate = this.plus(direction.getDistanceCoordinate(level));
-            if (diagonalCoordinate != null && diagonalCoordinate.isWithIn())
+            if (diagonalCoordinate.isWithIn())
                 diagonalCoordinates.add(diagonalCoordinate);
         }
         return diagonalCoordinates;
@@ -114,6 +114,14 @@ public class Coordinate {
         return Coordinate.DIMENSION;
     }
 
+    public static int getLowerLimit() {
+        return LOWER_LIMIT;
+    }
+
+    public static int getUpperLimit() {
+        return UPPER_LIMIT;
+    }
+
     @Override
     public String toString() {
         return "(" + row + ", " + column + ")";
@@ -139,9 +147,7 @@ public class Coordinate {
         Coordinate other = (Coordinate) obj;
         if (column != other.column)
             return false;
-        if (row != other.row)
-            return false;
-        return true;
+        return row == other.row;
     }
 
 }
