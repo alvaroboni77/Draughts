@@ -35,12 +35,7 @@ public class Game {
 	public Error move(Coordinate... coordinates) {
         Error error;
         List<Coordinate> removedCoordinates = new ArrayList<Coordinate>();
-        List<Coordinate> piecesCanCapture = new ArrayList<>();
-        List<Coordinate> coordinateList =  this.getCoordinatesWithActualColor();
-        for(Coordinate coordinate : coordinateList) {
-            if(isCanCapture(coordinate))
-                piecesCanCapture.add(coordinate);
-        }
+        List<Coordinate> piecesCanCapture = this.getPiecesCanCapture();
         int pair = 0;
         do {
             error = this.isCorrectPairMove(pair, coordinates);
@@ -51,20 +46,23 @@ public class Game {
         } while (pair < coordinates.length - 1 && error == null);
         error = this.isCorrectGlobalMove(error, removedCoordinates, coordinates);
         if (error == null) {
-            if(piecesCanCapture.size()>0 && removedCoordinates.size()==0)
-            {
-                if(piecesCanCapture.contains(coordinates[0])){
-                    piecesCanCapture.remove(coordinates[0]);
-                    piecesCanCapture.add(coordinates[1]);
-                }
-                int random = (int)(Math.random()*(piecesCanCapture.size()));
-                this.board.remove(piecesCanCapture.get(random));
-            }
+            this.removeRandomPieceCanCapture(piecesCanCapture, removedCoordinates, coordinates);
             this.turn.change();
         }
         else
             this.unMovesUntilPair(removedCoordinates, pair, coordinates);
         return error;
+    }
+
+    private List<Coordinate> getPiecesCanCapture()
+    {
+        List<Coordinate> coordinateList =  this.getCoordinatesWithActualColor();
+        List<Coordinate> listPieceCanCapture = new ArrayList<>();
+        for(Coordinate coordinate : coordinateList) {
+            if(this.isCanCapture(coordinate))
+                listPieceCanCapture.add(coordinate);
+        }
+        return listPieceCanCapture;
     }
 
     private Boolean isCanCapture(Coordinate coordinate) {
@@ -87,6 +85,18 @@ public class Game {
 
     private Boolean checkCapture(Coordinate... coordinates) {
         return this.isCorrectPairMove(0, coordinates) == null && this.getBetweenDiagonalPiece(0, coordinates) != null;
+    }
+
+    private void removeRandomPieceCanCapture(List<Coordinate> piecesCanCapture, List<Coordinate> removedCoordinates, Coordinate[] coordinates) {
+        if(piecesCanCapture.size()>0 && removedCoordinates.size()==0)
+        {
+            if(piecesCanCapture.contains(coordinates[0])) {
+                piecesCanCapture.remove(coordinates[0]);
+                piecesCanCapture.add(coordinates[1]);
+            }
+            int random = (int)(Math.random()*(piecesCanCapture.size()));
+            this.board.remove(piecesCanCapture.get(random));
+        }
     }
 
 	private Error isCorrectPairMove(int pair, Coordinate... coordinates) {
